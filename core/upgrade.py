@@ -7,7 +7,7 @@ from core.info import get_info
 
 
 def get_card(data, proxies=None):
-    url = "https://api.hamsterkombatgame.io/clicker/upgrades-for-buy"
+    url = "https://api.hamsterkombatgame.io/interlude/upgrades-for-buy"
 
     try:
         response = requests.post(
@@ -24,7 +24,7 @@ def get_card(data, proxies=None):
 
 
 def buy_card(data, card_id, proxies=None):
-    url = "https://api.hamsterkombatgame.io/clicker/buy-upgrade"
+    url = "https://api.hamsterkombatgame.io/interlude/buy-upgrade"
     current_time = datetime.datetime.now()
     current_timestamp = int(current_time.timestamp())
     payload = {"upgradeId": card_id, "timestamp": current_timestamp}
@@ -72,6 +72,7 @@ def get_highest_ratio_item(data, proxies=None):
                         return highest_ratio_item
                 else:
                     ratio = profit_price_ratio(item)
+                    print(profit_price_ratio)
                     if (
                         ratio > highest_ratio
                         and price < balance_coins
@@ -93,6 +94,7 @@ def get_highest_ratio_item(data, proxies=None):
 def process_buy_card(data, proxies=None):
     while True:
         highest_ratio_item = get_highest_ratio_item(data=data, proxies=proxies)
+        print(highest_ratio_item)
         if highest_ratio_item:
             card_id = highest_ratio_item["id"]
             card_name = highest_ratio_item["name"]

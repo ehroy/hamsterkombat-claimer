@@ -1,5 +1,6 @@
 import sys
-
+import requests
+import threading  # Import threading
 sys.dont_write_bytecode = True
 
 from smart_airdrop_claimer import base
@@ -32,6 +33,54 @@ class HamsterKombat:
             config_file=self.config_file, config_name="auto-buy-card"
         )
 
+    def process_account(self, data, no, num_acc):
+        try:
+            base.log(self.line)
+            base.log(f"{base.green}Account number: {base.white}{no + 1}/{num_acc}")
+            datas = {"initDataRaw": data}
+
+            res = requests.post("https://api.hamsterkombat.io/auth/auth-by-telegram-webapp", json=datas).json()
+            get_info(data=res['authToken'])
+            headers = {
+                'accept': '*/*',
+                'accept-language': 'en-US,en;q=0.9',
+                'authorization': f"Bearer {res['authToken']}",
+                'origin': 'https://hamsterkombatgame.io',
+                'priority': 'u=1, i',
+                'referer': 'https://hamsterkombatgame.io/',
+                'sec-ch-ua': '"Chromium";v="128", "Not;A=Brand";v="24", "Google Chrome";v="128"',
+                'sec-ch-ua-mobile': '?0',
+                'sec-ch-ua-platform': '"Windows"',
+                'sec-fetch-dest': 'empty',
+                'sec-fetch-mode': 'cors',
+                'sec-fetch-site': 'same-site',
+                'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36',
+            }
+            listtask = requests.post("https://api.hamsterkombatgame.io/interlude/list-tasks", headers=headers).json()
+            for task in listtask['tasks']:
+                titlenya = task['id'];
+                if task['isCompleted'] == False:
+                    datad = {"taskId":titlenya}
+                    taskcheck = requests.post("https://api.hamsterkombatgame.io/interlude/check-task", headers=headers, json=datad).json()
+                    print(taskcheck['task']['completedAt'])
+            # get_info(data=res['authToken'])
+            # Tap
+            # if self.auto_tap:
+            #     base.log(f"{base.yellow}Auto Tap: {base.green}ON")
+            #     process_tap(data=res['authToken'])
+            # else:
+            #     base.log(f"{base.yellow}Auto Tap: {base.red}OFF")
+
+            # Buy card
+            # if self.auto_buy_card:
+            #     base.log(f"{base.yellow}Auto Buy Card: {base.green}ON")
+            #     process_buy_card(data=res['authToken'])
+            # else:
+            #     base.log(f"{base.yellow}Auto Buy Card: {base.red}OFF")
+
+        except Exception as e:
+            base.log(f"{base.red}Error: {base.white}{e}")
+
     def main(self):
         while True:
             base.clear_terminal()
@@ -41,29 +90,17 @@ class HamsterKombat:
             base.log(self.line)
             base.log(f"{base.green}Number of accounts: {base.white}{num_acc}")
 
-            for no, data in enumerate(data):
-                base.log(self.line)
-                base.log(f"{base.green}Account number: {base.white}{no+1}/{num_acc}")
+            threads = []
 
-                try:
-                    get_info(data=data)
+            # Create and start a thread for each account
+            for no, account_data in enumerate(data):
+                thread = threading.Thread(target=self.process_account, args=(account_data, no, num_acc))
+                threads.append(thread)
+                thread.start()
 
-                    # Tap
-                    if self.auto_tap:
-                        base.log(f"{base.yellow}Auto Tap: {base.green}ON")
-                        process_tap(data=data)
-                    else:
-                        base.log(f"{base.yellow}Auto Tap: {base.red}OFF")
-
-                    # Buy card
-                    if self.auto_buy_card:
-                        base.log(f"{base.yellow}Auto Buy Card: {base.green}ON")
-                        process_buy_card(data=data)
-                    else:
-                        base.log(f"{base.yellow}Auto Buy Card: {base.red}OFF")
-
-                except Exception as e:
-                    base.log(f"{base.red}Error: {base.white}{e}")
+            # Wait for all threads to finish
+            for thread in threads:
+                thread.join()
 
             print()
             wait_time = random.randint(5, 20)

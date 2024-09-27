@@ -1,0 +1,1 @@
+user=%7B%22id%22%3A6915784871%2C%22first_name%22%3A%22Eeee%22%2C%22last_name%22%3A%22%22%2C%22username%22%3A%22rdrake4024%22%2C%22language_code%22%3A%22en%22%2C%22allows_write_to_pm%22%3Atrue%7D&chat_instance=-4127764377185414713&chat_type=sender&start_param=991756526&auth_date=1726662061&hash=2228362309977acb8c1e9fd5ebccbff1685bbc737cb8c07a97109f33de37d0b7

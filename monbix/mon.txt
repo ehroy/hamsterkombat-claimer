@@ -1,0 +1,1 @@
+user=%7B%22id%22%3A7181938357%2C%22first_name%22%3A%22Ggf%22%2C%22last_name%22%3A%22Cvg%22%2C%22username%22%3A%22mooreian14100%22%2C%22language_code%22%3A%22en%22%2C%22allows_write_to_pm%22%3Atrue%7D&chat_instance=8520319979565598900&chat_type=sender&start_param=ref_798166426&auth_date=1727154295&hash=b6c5ac57ac67a42ad8e736dbe5bcab6db44f8f4173e53242fee29b8a6df2e50b
